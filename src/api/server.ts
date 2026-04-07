@@ -1,4 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { initNewsSocket } from '../sockets/news-socket';
 import cors from 'cors';
 import path from 'path';
 import { config } from '../config';
@@ -51,11 +54,20 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-export async function startAPIServer(): Promise<void> {
+let httpServer: ReturnType<typeof createServer> | null = null;
+let io: Server | null = null;
+
+export async function startAPIServer(): Promise<{ httpServer: ReturnType<typeof createServer>; io: Server }> {
   return new Promise((resolve) => {
-    app.listen(config.PORT, () => {
+    httpServer = createServer(app);
+    io = new Server(httpServer, {
+      cors: { origin: '*', methods: ['GET', 'POST'] }
+    });
+    initNewsSocket(httpServer);
+    
+    httpServer.listen(config.PORT, () => {
       logger.info(`API server listening on port ${config.PORT}`);
-      resolve();
+      resolve({ httpServer: httpServer!, io: io! });
     });
   });
 }

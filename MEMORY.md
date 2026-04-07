@@ -1079,3 +1079,132 @@ watchlist (
 - 添加 channel 列 (VARCHAR(50), DEFAULT 'feishu')
 - 添加 status 列 (VARCHAR(20), DEFAULT 'sent')
 - 学习循环通知日志正常写入
+
+---
+
+## 向量化回测引擎修复 (2026-04-07 第二轮)
+
+### 修复内容
+1. ✅ 修复变量作用域: 股票加载逻辑移到 runLearningLoop() 开头
+2. ✅ 添加 fs 模块导入
+3. ✅ 修复数据格式兼容: 支持 {klines: [...]} 和 [...] 两种格式
+4. ✅ 增强数据健壮性: 处理 None 值和多种字段名
+
+### 测试结果
+- 向量化回测成功运行
+- 473笔交易, 49.5%胜率
+- 系统完整运行正常
+
+---
+
+## 实时新闻系统 WebSocket 推送 (2026-04-05)
+
+### 技术栈
+- Socket.IO 4.8.3
+- WebSocket (ws 库)
+- 技术选择原因：Socket.IO 自动降级 + 重连机制完善
+
+### 核心文件
+
+1. **src/sockets/news-socket.ts** - 推送引擎
+   - initNewsSocket(): 初始化 WebSocket 服务
+   - emitNews(): 推送单条新闻
+   - emitNewsBatch(): 批量推送
+   - emitMarketStatus(): 市场状态变化推送
+   - 支持按市场/分类订阅
+
+2. **src/api/server.ts** - API 服务器集成
+   - 集成 Socket.IO 到 Express
+   - HTTP 服务器创建改为 createServer()
+   - 路径: /socket.io
+
+3. **public/panel-news.html** - 前端实时面板
+   - 使用 Socket.IO 客户端
+   - 实时接收新闻更新
+   - 闪烁提示新新闻
+   - WebSocket 失败时自动降级轮询
+
+### 功能
+- emitNews(news): 实时推送单条新闻给所有客户端
+- emitNewsBatch(newsList): 批量推送
+- 按 market:us/hk/cn 分类广播
+- 按 category 分类广播
+- 重连机制: 最多5次重连
+
+### 工作流程
+```
+Python 抓取 → news-socket.emitNews() → Socket.IO 广播 → 前端实时更新
+```
+
+### 部署状态
+- 代码已编写完成
+- 依赖已安装 (socket.io + socket.io-client)
+- 等待服务器重启后生效
+- 验证: 访问 /panel-news.html 连接状态
+
+---
+
+## P0 实时新闻系统完成 (2026-04-07)
+
+### 实现内容
+
+1. **新闻 API** (8000端口)
+   - GET /api/news 端点
+   - 支持分页/过滤/搜索
+   - 当前数据: 1185条新闻
+   - 路径: agents/news-monitor/main.py
+
+2. **情绪分析** (sentiment.py)
+   - 基于规则匹配
+   - 输出: positive/negative/neutral
+   - 支持中英文
+
+3. **推送触发器** (news-push-trigger-simple.py)
+   - 每5分钟自动抓取新新闻
+   - 后台运行
+
+### 技术栈
+- FastAPI + asyncpg + httpx
+- 规则匹配 NLP
+- PostgreSQL 数据库
+
+### 测试结果
+- API 正常响应 ✅
+- 情绪分析准确 ✅
+- 自动抓取工作正常 ✅
+
+### 部署状态
+- 新闻 API 运行在 8000 端口
+- 推送触发器后台运行
+- 数据源: 雪球/东方财富/GDELT
+
+---
+
+## P0-2 异常检测系统完成 (2026-04-07)
+
+### 实现内容
+
+1. **策略偏离检测** (strategy-drift-detector.ts)
+   - 监控胜率/Sharpe/回撤偏差
+   - 检测到 2 个异常
+
+2. **数据断点检测** (data-gap-detector.ts)
+   - 检测数据过时/异常值
+   - 检测到 87 个异常
+   - 最长 372 小时未更新
+
+3. **持仓异常检测** (position-anomaly-detector.ts)
+   - 检测集中度/止损未触发
+
+### 数据库
+- anomaly_log 表
+- 178 条异常记录
+
+### 运行方式
+```bash
+npx ts-node agents/detectors/run-all.ts
+```
+
+### 测试结果
+- 全部 3 个检测器正常工作 ✅
+- 异常记录已写入数据库 ✅

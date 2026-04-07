@@ -236,6 +236,7 @@
     <div class="loading">Loading...</div>
   </div>
 </div>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
 (function() { if (window.self !== window.top) { document.querySelector(".mini-nav").style.display = "none"; } })();
 
@@ -244,6 +245,111 @@
   var countdown = 30;
   var countdownEl = document.getElementById('countdown');
   var allData = [];
+  var ws = null;
+  var wsConnected = false;
+  var reconnectAttempts = 0;
+  var maxReconnectAttempts = 5;
+  
+  // WebSocket 连接
+  function initWebSocket() {
+    try {
+      ws = io('/news-socket', {
+        path: '/socket.io',
+        transports: ['websocket', 'polling'],
+      });
+      
+      ws.on('connect', function() {
+        console.log('[NewsSocket] Connected');
+        wsConnected = true;
+        reconnectAttempts = 0;
+        // 订阅新闻
+        ws.emit('subscribe', { market: null, categories: null });
+        // 请求初始数据
+        load();
+      });
+      
+      ws.on('news', function(payload) {
+        console.log('[NewsSocket] Received news:', payload.data.title);
+        // 添加到列表顶部
+        if (payload.type === 'news_update' && payload.data) {
+          allData.unshift({
+            title: payload.data.title,
+            source: payload.data.source,
+            published_at: payload.data.publishedAt,
+            ai_summary: payload.data.ai_summary,
+            related_symbols: payload.data.symbols,
+            sentiment: payload.data.sentiment,
+            alert_level: payload.data.alertLevel,
+            category: payload.data.category
+          });
+          render();
+          // 闪烁提示
+          flashNewNews();
+        }
+      });
+      
+      ws.on('news_batch', function(payload) {
+        console.log('[NewsSocket] Received batch:', payload.count);
+        if (payload.data && payload.data.length > 0) {
+          var newItems = payload.data.map(function(n) {
+            return {
+              title: n.title,
+              source: n.source,
+              published_at: n.publishedAt,
+              ai_summary: '',
+              related_symbols: n.symbols || [],
+              sentiment: n.sentiment,
+              alert_level: n.alertLevel,
+              category: n.category
+            };
+          });
+          allData = newItems.concat(allData).slice(0, 200);
+          render();
+        }
+      });
+      
+      ws.on('disconnect', function(reason) {
+        console.log('[NewsSocket] Disconnected:', reason);
+        wsConnected = false;
+      });
+      
+      ws.on('error', function(err) {
+        console.error('[NewsSocket] Error:', err);
+      });
+      
+    } catch(e) {
+      console.error('[NewsSocket] Init error:', e);
+      // 回退到轮询
+      startPolling();
+    }
+  }
+  
+  function flashNewNews() {
+    var header = document.querySelector('.panel-header');
+    if (header) {
+      header.style.background = 'var(--accent-green)';
+      setTimeout(function() {
+        header.style.background = '';
+      }, 1000);
+    }
+  }
+  
+  function startPolling() {
+    console.log('[News] Falling back to polling');
+    setInterval(function() {
+      countdown--;
+      if (countdown <= 0) { countdown = 30; load(); }
+      if (countdownEl) countdownEl.textContent = countdown+'s';
+    }, 1000);
+  }
+  
+  // 尝试 WebSocket，失败则回退到轮询
+  if (typeof io !== 'undefined') {
+    initWebSocket();
+  } else {
+    console.log('[News] Socket.IO not loaded, using polling');
+    startPolling();
+  }
   
   var categoryLabels = {
     'macro_policy': '宏观政策',
@@ -406,11 +512,22 @@
     document.getElementById('news-list').innerHTML = html;
   }
   
-  setInterval(function() {
-    countdown--;
-    if (countdown <= 0) { countdown = 30; load(); }
-    if (countdownEl) countdownEl.textContent = countdown+'s';
-  }, 1000);
+  // WebSocket 模式下不需要轮询，但保留倒计时显示更新
+  if (!wsConnected) {
+    setInterval(function() {
+      countdown--;
+      if (countdown <= 0) { countdown = 30; load(); }
+      if (countdownEl) countdownEl.textContent = countdown+'s';
+    }, 1000);
+  } else {
+    // WebSocket 模式：每60秒全量刷新一次
+    if (countdownEl) countdownEl.textContent = 'LIVE';
+    setInterval(function() {
+      countdown--;
+      if (countdown <= 0) { countdown = 60; load(); }
+      if (countdownEl) countdownEl.textContent = countdown + 's';
+    }, 1000);
+  }
   
   load();
 })();
