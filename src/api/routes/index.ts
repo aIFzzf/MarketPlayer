@@ -586,36 +586,23 @@ router.get('/dashboard/signals', async (_req: Request, res: Response) => {
 // 获取新闻列表
 router.get('/dashboard/news', async (_req: Request, res: Response) => {
   try {
-    // 优先从 news_status 表读取（新闻监控系统）
-    const newsStatus = await query(`
+    // 直接从 news_items 表读取（新闻监控系统写入此表）
+    const news = await query(`
       SELECT
+        id,
         title,
         source,
-        published_at,
-        summary as ai_summary,
         symbols as related_symbols,
+        published_at,
+        ai_processed,
+        ai_summary,
         sentiment,
-        alert_level,
-        category
-      FROM news_status
+        market
+      FROM news_items
       ORDER BY published_at DESC
       LIMIT 100
     `);
 
-    // 如果 news_status 表有数据，使用新系统
-    if (newsStatus && newsStatus.length > 0) {
-      res.json({ success: true, data: newsStatus });
-      return;
-    }
-
-    // 降级到旧系统（news_items 表）
-    const news = await query(`
-      SELECT id, title, source, symbols as related_symbols,
-             published_at, ai_processed, ai_summary
-      FROM news_items
-      ORDER BY published_at DESC
-      LIMIT 30
-    `);
     res.json({ success: true, data: news });
   } catch (error) {
     logger.error('Error fetching news:', error);
