@@ -12,6 +12,10 @@ from datetime import datetime
 
 # 情绪分析模块
 from sentiment import analyze_sentiment
+from classifier import NewsClassifier
+
+# 初始化分类器
+classifier = NewsClassifier()
 
 app = FastAPI(title="MarketPlayer News Monitor")
 
@@ -241,7 +245,7 @@ async def fetch_news(limit_per_source: int = 10):
 
 
 async def _save_news(news_items):
-    """写入新闻到数据库，包含情绪分析"""
+    """写入新闻到数据库，包含情绪分析和优先级"""
     inserted = 0
     
     async with db_pool.acquire() as conn:
@@ -262,6 +266,16 @@ async def _save_news(news_items):
                 text = f"{news.get('title', '')} {news.get('content', '')}"
                 sentiment = analyze_sentiment(text)
                 
+                # 优先级计算
+                news_data = {
+                    'title': news.get('title', ''),
+                    'content': news.get('content', ''),
+                    'sentiment': sentiment,
+                    'symbols': news.get('symbols', ''),
+                    'source': news.get('source', '')
+                }
+                alert_level = classifier.calculate_alert_level(news_data)
+                
                 # 写入
                 await conn.execute(
                     """
@@ -278,8 +292,16 @@ async def _save_news(news_items):
                     news.get("market", "global"),
                     sentiment,
                 )
+                
+                # 同步写入 news_status 表 (包含 alert_level)
+                await conn.execute("""
+                    INSERT INTO news_status (id, title, source, published_at, sentiment, alert_level, symbols)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    ON CONFLICT (id) DO UPDATE SET alert_level = $6
+                """, news_id, news["title"], news["source"], news.get("published_at"), sentiment, alert_level, news.get("symbols", ""))
+                
                 inserted += 1
-            except Exception:
+            except Exception as e:
                 pass
     
     return inserted
