@@ -33,7 +33,7 @@ DB_CONFIG = {
     "host": os.getenv("PGHOST", "localhost"),
     "port": int(os.getenv("PGPORT", "5432")),
     "database": os.getenv("DATABASE", "trading_bot"),
-    "user": os.getenv("PGUSER", "zhengzefeng"),
+    "user": os.getenv("PGUSER", "trading_user"),
     "password": os.getenv("PGPASSWORD", "password"),
 }
 db_pool = None
@@ -571,6 +571,141 @@ async def calculate_sentiment():
         return {"success": True, "data": data}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+
+# ========== 情绪建议审批 API ==========
+
+@app.get("/api/sentiment/suggestions")
+async def get_sentiment_suggestions(status: str = None, limit: int = 20):
+    """查询情绪建议列表"""
+    import traceback
+    try:
+        print(f"[API] db_pool: {db_pool}")
+        print(f"[API] status: {status}, limit: {limit}")
+        
+        async with db_pool.acquire() as conn:
+            print("[API] got connection")
+            
+            where = "1=1"
+            params = []
+            
+            if status:
+                where += f" AND status = ${len(params) + 1}"
+                params.append(status)
+            
+            query = f"""
+                SELECT * FROM sentiment_suggestions 
+                WHERE {where}
+                ORDER BY created_at DESC
+                LIMIT ${len(params) + 1}
+            """
+            params.append(limit)
+            
+            print(f"[API] query: {query}")
+            print(f"[API] params: {params}")
+            
+            rows = await conn.fetch(query, *params)
+            print(f"[API] rows: {len(rows)}")
+            
+            total = await conn.fetchval(
+                f"SELECT COUNT(*) FROM sentiment_suggestions WHERE {where}", *params[:-1]
+            )
+            print(f"[API] total: {total}")
+            
+            return {
+                "success": True,
+                "data": [dict(row) for row in rows],
+                "total": total
+            }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"success": False, "error": str(e)}
+
+
+@app.get("/api/sentiment/suggestions/{suggestion_id}")
+async def get_sentiment_suggestion(suggestion_id: int):
+    """查询单个建议"""
+    async with db_pool.acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT * FROM sentiment_suggestions WHERE id = $1",
+            suggestion_id
+        )
+        
+        if not row:
+            return {"success": False, "error": "Not found"}
+        
+        return {"success": True, "data": dict(row)}
+
+
+@app.post("/api/sentiment/suggestions/{suggestion_id}/approve")
+async def approve_sentiment_suggestion(suggestion_id: int):
+    """批准建议"""
+    async with db_pool.acquire() as conn:
+        # 检查状态
+        row = await conn.fetchrow(
+            "SELECT status FROM sentiment_suggestions WHERE id = $1",
+            suggestion_id
+        )
+        
+        if not row:
+            return {"success": False, "error": "Not found"}
+        
+        if row['status'] != 'pending':
+            return {"success": False, "error": "Already processed"}
+        
+        # 更新状态
+        await conn.execute(
+            """
+            UPDATE sentiment_suggestions 
+            SET status = 'approved', reviewed_at = NOW()
+            WHERE id = $1
+            """,
+            suggestion_id
+        )
+        
+        # 获取建议详情发送通知
+        suggestion = await conn.fetchrow(
+            "SELECT * FROM sentiment_suggestions WHERE id = $1",
+            suggestion_id
+        )
+        
+        # 发送飞书通知
+        await conn.execute("""
+            INSERT INTO notification_log (id, channel, message, status)
+            VALUES ($1, 'feishu', $2, 'sent')
+        """, [f"approved_{suggestion_id}", f"✅ 建议已批准\n股票: {suggestion['symbol']}\n操作: {suggestion['suggested_action']}"])
+        
+        return {"success": True, "message": "Approved"}
+
+
+@app.post("/api/sentiment/suggestions/{suggestion_id}/reject")
+async def reject_sentiment_suggestion(suggestion_id: int):
+    """拒绝建议"""
+    async with db_pool.acquire() as conn:
+        # 检查状态
+        row = await conn.fetchrow(
+            "SELECT status FROM sentiment_suggestions WHERE id = $1",
+            suggestion_id
+        )
+        
+        if not row:
+            return {"success": False, "error": "Not found"}
+        
+        if row['status'] != 'pending':
+            return {"success": False, "error": "Already processed"}
+        
+        # 更新状态
+        await conn.execute(
+            """
+            UPDATE sentiment_suggestions 
+            SET status = 'rejected', reviewed_at = NOW()
+            WHERE id = $1
+            """,
+            suggestion_id
+        )
+        
+        return {"success": True, "message": "Rejected"}
 
 
 if __name__ == "__main__":

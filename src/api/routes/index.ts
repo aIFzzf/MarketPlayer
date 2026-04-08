@@ -652,6 +652,168 @@ router.get('/sentiment/signals', async (req: Request, res: Response) => {
   }
 });
 
+// ─── 情绪建议审批API ────────────────────────────────────────────────────────
+
+// 获取待审批建议
+router.get('/sentiment/suggestions', async (req: Request, res: Response) => {
+  try {
+    const status = (req.query.status as string) || 'pending';
+    const limit = parseInt(req.query.limit as string) || 50;
+
+    const suggestions = await query(`
+      SELECT
+        id,
+        symbol,
+        event_type,
+        sentiment_score,
+        sentiment_change,
+        momentum,
+        agent_analysis,
+        suggested_action,
+        confidence,
+        reason,
+        risk_level,
+        entry_price,
+        stop_loss,
+        take_profit,
+        status,
+        created_at,
+        reviewed_at,
+        reviewed_by,
+        review_note
+      FROM sentiment_suggestions
+      WHERE status = $1
+      ORDER BY created_at DESC
+      LIMIT $2
+    `, [status, limit]);
+
+    res.json({ success: true, data: suggestions });
+  } catch (error) {
+    logger.error('Error fetching suggestions:', error);
+    res.json({ success: false, error: 'Database error' });
+  }
+});
+
+// 批准建议
+router.post('/sentiment/suggestions/:id/approve', async (req: Request, res: Response) => {
+  try {
+    const suggestionId = parseInt(req.params.id);
+    const { review_note } = req.body;
+    const reviewed_by = (req as any).auth?.userId || 'system';
+
+    // 获取建议详情
+    const suggestion = await queryOne(`
+      SELECT * FROM sentiment_suggestions WHERE id = $1
+    `, [suggestionId]);
+
+    if (!suggestion) {
+      res.status(404).json({ success: false, error: 'Suggestion not found' });
+      return;
+    }
+
+    if (suggestion.status !== 'pending') {
+      res.status(400).json({ success: false, error: 'Suggestion already reviewed' });
+      return;
+    }
+
+    // 更新建议状态
+    await query(`
+      UPDATE sentiment_suggestions
+      SET status = 'approved',
+          reviewed_at = NOW(),
+          reviewed_by = $1,
+          review_note = $2
+      WHERE id = $3
+    `, [reviewed_by, review_note || null, suggestionId]);
+
+    // 生成交易信号
+    const signalResult = await query(`
+      INSERT INTO sentiment_signals (
+        symbol, action, type, reason,
+        sentiment_score, momentum, confidence, priority,
+        created_at
+      ) VALUES ($1, $2, 'sentiment', $3, $4, $5, $6, $7, NOW())
+      RETURNING id
+    `, [
+      suggestion.symbol,
+      suggestion.suggested_action,
+      suggestion.reason,
+      suggestion.sentiment_score,
+      suggestion.momentum,
+      suggestion.confidence,
+      suggestion.risk_level === 'HIGH' ? 'HIGH' : 'MEDIUM'
+    ]);
+
+    const signalId = signalResult[0].id;
+
+    // 发送飞书通知
+    try {
+      const { sendFeishuText } = await import('../../services/market/watcher/feishu-notify');
+      await sendFeishuText(`
+✅ 交易信号已批准
+
+📊 股票：${suggestion.symbol}
+🎯 操作：${suggestion.suggested_action}
+💯 置信度：${(suggestion.confidence * 100).toFixed(0)}%
+
+📝 理由：${suggestion.reason}
+👤 审批人：${reviewed_by}
+      `);
+    } catch (error) {
+      logger.error('Failed to send Feishu notification:', error);
+    }
+
+    res.json({ success: true, signal_id: signalId });
+  } catch (error) {
+    logger.error('Error approving suggestion:', error);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// 拒绝建议
+router.post('/sentiment/suggestions/:id/reject', async (req: Request, res: Response) => {
+  try {
+    const suggestionId = parseInt(req.params.id);
+    const { review_note } = req.body;
+    const reviewed_by = (req as any).auth?.userId || 'system';
+
+    if (!review_note) {
+      res.status(400).json({ success: false, error: 'Review note is required for rejection' });
+      return;
+    }
+
+    // 获取建议详情
+    const suggestion = await queryOne(`
+      SELECT * FROM sentiment_suggestions WHERE id = $1
+    `, [suggestionId]);
+
+    if (!suggestion) {
+      res.status(404).json({ success: false, error: 'Suggestion not found' });
+      return;
+    }
+
+    if (suggestion.status !== 'pending') {
+      res.status(400).json({ success: false, error: 'Suggestion already reviewed' });
+      return;
+    }
+
+    // 更新建议状态
+    await query(`
+      UPDATE sentiment_suggestions
+      SET status = 'rejected',
+          reviewed_at = NOW(),
+          reviewed_by = $1,
+          review_note = $2
+      WHERE id = $3
+    `, [reviewed_by, review_note, suggestionId]);
+
+    res.json({ success: true });
+  } catch (error) {
+    logger.error('Error rejecting suggestion:', error);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
 // 获取聚合统计
 router.get('/dashboard/stats', async (_req: Request, res: Response) => {
   try {
