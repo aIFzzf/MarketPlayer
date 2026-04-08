@@ -36,10 +36,10 @@
         }
         container.innerHTML = result.data.map(s => `
           <div class="suggestion-card">
-            <div class="symbol">${s.symbol} - ${s.event_type}</div>
-            <p>情绪分数: ${s.sentiment_score} | 变化: ${s.sentiment_change}</p>
-            <div class="agent-analysis"><h3>Agent分析</h3><pre>${s.agent_analysis}</pre></div>
-            <p><strong>建议: ${s.suggested_action}</strong> | 置信度: ${(s.confidence*100).toFixed(0)}% | 风险: ${s.risk_level}</p>
+            <div class="symbol">${s.symbol} - ${s.eventType}</div>
+            <p>情绪分数: ${s.sentimentScore} | 变化: ${s.sentimentChange}</p>
+            <div class="agent-analysis"><h3>🤖 Agent分析</h3><pre>${s.agentAnalysis}</pre></div>
+            <p><strong>建议: ${s.suggestedAction}</strong> | 置信度: ${(s.confidence*100).toFixed(0)}% | 风险: ${s.riskLevel}</p>
             <p>理由: ${s.reason}</p>
             <button class="btn btn-approve" onclick="approve(${s.id})">✅ 批准</button>
             <button class="btn btn-reject" onclick="reject(${s.id})">❌ 拒绝</button>
