@@ -1276,3 +1276,84 @@ npx ts-node agents/detectors/run-all.ts
 - 前端新闻显示正常（/api/dashboard/news 端点工作正常）
 
 **Git commit**: 817898b
+
+---
+
+## 2026-04-08 修复完成
+
+### 1. 情绪信号生成器和飞书通知 ✅
+- Git commit: 817898b, 478a9fe
+- 修复 SQL 查询、数据库表名、TypeScript 导入
+- 集成飞书通知（HIGH/MEDIUM 信号）
+
+### 2. 前端新闻显示修复 ✅
+- Git commit: 37a74d5
+- 问题：前端显示旧新闻（2026-04-05），数据库有新闻（2026-04-08）
+- 原因：API 读取错误的表（news_status 而非 news_items）
+- 修复：直接读取 news_items 表，返回最新100条
+- 测试：✅ 前端显示最新新闻
+
+### 代码已同步
+- 所有修改已提交到 feature/continuous-improvement-2026-04-08
+- 已推送到远程仓库
+- 服务器已重启，API 正常运行
+
+---
+
+## 2026-04-08 任务1完成：Alert Level 计算逻辑
+
+### 实现内容
+- agents/news-monitor/classifier.py（新建）
+- agents/news-monitor/test_classifier.py（新建）
+- agents/news-monitor/main.py（修改）
+
+### 评分规则（总分100）
+
+| 因素 | 最高分 | 说明 |
+|------|--------|------|
+| 情绪强度 | 40 | 极度负面/正面40分，中性10分 |
+| 影响范围 | 30 | >=5股票30分，1-2股票10分 |
+| 来源可信度 | 20 | bloomberg/reuters 20分 |
+| 关键词 | 10 | 暴跌/崩盘+10，监管+8，财报+6 |
+
+### 优先级映射
+- 总分 >= 70：CRITICAL (1)
+- 总分 50-69：HIGH (2)
+- 总分 30-49：MEDIUM (3)
+- 总分 < 30：LOW (4)
+
+### 测试结果
+- 9/9 单元测试通过 ✅
+- 实际分布：CRITICAL 2, HIGH 8, MEDIUM 9, LOW 2
+- 验收通过
+
+### Git 提交
+- Commit: c4ded7f
+
+---
+
+## 2026-04-08 实施完成总结
+
+### 任务1：Alert Level 计算 ✅ 100%
+- Commit: c4ded7f
+- 状态：已投入生产
+- 测试：9/9 通过
+- 分布：合理（CRITICAL 9.5%, HIGH 38%, MEDIUM 43%, LOW 9.5%）
+
+### 任务2：情绪因子回测 ✅ 90%
+- Commit: 8e225a7
+- 状态：数据回填完成，待完整回测
+- 完成：1248条记录，344天，114只股票
+- 分布：23.3% positive, 11.3% negative, 65.4% neutral
+- 下一步：运行完整回测，对比基准 vs 情绪策略
+
+### 总耗时：35分钟
+
+### 验收报告
+- alert-level-report.md：任务1验收通过
+- sentiment-backtest-report.md：任务2部分完成
+
+### 下一步行动
+1. ~~回填历史情绪数据（1239条新闻）~~ ✅ 已完成
+2. 运行完整回测，对比基准 vs 情绪策略
+3. 根据结果决定是否启用情绪因子

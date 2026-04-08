@@ -610,6 +610,48 @@ router.get('/dashboard/news', async (_req: Request, res: Response) => {
   }
 });
 
+// 获取情绪信号
+router.get('/sentiment/signals', async (req: Request, res: Response) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 50;
+    const symbol = req.query.symbol as string;
+
+    let queryStr = `
+      SELECT
+        id,
+        symbol,
+        action,
+        type,
+        reason,
+        sentiment_score,
+        momentum,
+        confidence,
+        priority,
+        created_at
+      FROM sentiment_signals
+    `;
+
+    const params: any[] = [];
+
+    if (symbol) {
+      queryStr += ` WHERE symbol = $1`;
+      params.push(symbol);
+      queryStr += ` ORDER BY created_at DESC LIMIT $2`;
+      params.push(limit);
+    } else {
+      queryStr += ` ORDER BY created_at DESC LIMIT $1`;
+      params.push(limit);
+    }
+
+    const signals = await query(queryStr, params);
+
+    res.json({ success: true, data: signals });
+  } catch (error) {
+    logger.error('Error fetching sentiment signals:', error);
+    res.json({ success: false, error: 'Database error' });
+  }
+});
+
 // 获取聚合统计
 router.get('/dashboard/stats', async (_req: Request, res: Response) => {
   try {
