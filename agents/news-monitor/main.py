@@ -474,6 +474,83 @@ async def calculate_factors(symbols: str = None):
         return {"success": False, "error": str(e)}
 
 
+# ========== 情绪 API ==========
+
+@app.get("/api/sentiment/{symbol}")
+async def get_symbol_sentiment(symbol: str):
+    """查询股票情绪"""
+    import subprocess
+    try:
+        result = subprocess.run(
+            ['python3', 'src/sentiment/quantifier.py', symbol],
+            capture_output=True, text=True, timeout=30,
+            cwd=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        
+        import json
+        if result.stdout.strip():
+            data = json.loads(result.stdout.strip())
+            return {"success": True, "data": data}
+        
+        return {"success": True, "data": {"score": 0, "count": 0}}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@app.get("/api/sentiment")
+async def get_market_sentiment():
+    """查询市场整体情绪"""
+    import subprocess
+    try:
+        result = subprocess.run(
+            ['python3', '-c', '''
+import sys
+sys.path.insert(0, ".")
+from src.sentiment.quantifier import quantify_sentiment, calculate_momentum
+import json
+sent = quantify_sentiment()
+mom = calculate_momentum()
+result = {**sent, **mom}
+print(json.dumps(result))
+'''],
+            capture_output=True, text=True, timeout=30,
+            cwd=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        
+        import json
+        if result.stdout.strip():
+            data = json.loads(result.stdout.strip())
+            return {"success": True, "data": data}
+        
+        return {"success": True, "data": {"score": 0, "count": 0, "trend": "stable"}}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@app.get("/api/sentiment/signals")
+async def get_sentiment_signals():
+    """查询情绪信号 (简化版，直接返回空)"""
+    # 简化：暂不调用 TypeScript
+    return {"success": True, "count": 0, "data": []}
+
+
+@app.post("/api/sentiment/calculate")
+async def calculate_sentiment():
+    """手动触发情绪计算"""
+    import subprocess
+    try:
+        # 运行 Python 版本
+        result = subprocess.run(
+            ['python3', 'src/sentiment/quantifier.py'],
+            capture_output=True, text=True, timeout=30,
+            cwd=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        
+        import json
+        data = json.loads(result.stdout.strip()) if result.stdout.strip() else {}
+        
+        return {"success": True, "data": data}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

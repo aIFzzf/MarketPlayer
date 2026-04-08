@@ -1,35 +1,9 @@
 {
-  "date": "2026-04-06",
+  "date": "2026-04-07",
   "sources": [
     {
       "name": "HackerNews",
-      "items": [
-        {
-          "title": "Launch HN: Freestyle – Sandboxes for Coding Agents",
-          "url": "https://www.freestyle.sh/",
-          "score": 181
-        },
-        {
-          "title": "Show HN: Hippo, biologically inspired memory for AI agents",
-          "url": "https://github.com/kitfunso/hippo-memory",
-          "score": 24
-        },
-        {
-          "title": "Issue: Claude Code is unusable for complex engineering tasks with Feb updates",
-          "url": "https://github.com/anthropics/claude-code/issues/42796",
-          "score": 688
-        },
-        {
-          "title": "Agent Reading Test",
-          "url": "https://agentreadingtest.com",
-          "score": 40
-        },
-        {
-          "title": "AI singer now occupies eleven spots on iTunes singles chart",
-          "url": "https://www.showbiz411.com/2026/04/05/itunes-takeover-by-fake-ai-singer-eddie-dalton-now-occupies-eleven-spots-on-chart-despite-not-being-human-or-real-exclusive",
-          "score": 71
-        }
-      ]
+      "items": []
     },
     {
       "name": "GitHub",
@@ -37,62 +11,62 @@
         {
           "title": "openclaw/openclaw",
           "url": "https://github.com/openclaw/openclaw",
-          "stars": 350044,
-          "score": 350044
+          "stars": 351225,
+          "score": 351225
         },
         {
           "title": "affaan-m/everything-claude-code",
           "url": "https://github.com/affaan-m/everything-claude-code",
-          "stars": 142648,
-          "score": 142648
-        },
-        {
-          "title": "anomalyco/opencode",
-          "url": "https://github.com/anomalyco/opencode",
-          "stars": 138354,
-          "score": 138354
+          "stars": 144730,
+          "score": 144730
         },
         {
           "title": "obra/superpowers",
           "url": "https://github.com/obra/superpowers",
-          "stars": 137401,
-          "score": 137401
+          "stars": 139285,
+          "score": 139285
+        },
+        {
+          "title": "anomalyco/opencode",
+          "url": "https://github.com/anomalyco/opencode",
+          "stars": 139060,
+          "score": 139060
         },
         {
           "title": "x1xhlol/system-prompts-and-models-of-ai-tools",
           "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
-          "stars": 134571,
-          "score": 134571
+          "stars": 134659,
+          "score": 134659
         },
         {
           "title": "anthropics/skills",
           "url": "https://github.com/anthropics/skills",
-          "stars": 111594,
-          "score": 111594
+          "stars": 112315,
+          "score": 112315
         },
         {
           "title": "anthropics/claude-code",
           "url": "https://github.com/anthropics/claude-code",
-          "stars": 109896,
-          "score": 109896
+          "stars": 110600,
+          "score": 110600
         },
         {
           "title": "google-gemini/gemini-cli",
           "url": "https://github.com/google-gemini/gemini-cli",
-          "stars": 100414,
-          "score": 100414
+          "stars": 100531,
+          "score": 100531
         },
         {
           "title": "github/spec-kit",
           "url": "https://github.com/github/spec-kit",
-          "stars": 85694,
-          "score": 85694
+          "stars": 85994,
+          "score": 85994
         },
         {
-          "title": "openai/codex",
-          "url": "https://github.com/openai/codex",
-          "stars": 73474,
-          "score": 73474
+          "title": "msitarzewski/agency-agents",
+          "url": "https://github.com/msitarzewski/agency-agents",
+          "stars": 74377,
+          "score": 74377
         }
       ]
     },
