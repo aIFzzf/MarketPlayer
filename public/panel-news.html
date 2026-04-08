@@ -427,12 +427,12 @@
         return {
           title: n.title,
           source: n.source,
-          published_at: n.publishedAt,
-          ai_summary: n.aiSummary,
-          related_symbols: n.relatedSymbols,
-          sentiment: n.sentiment,
-          alert_level: n.alertLevel,
-          category: n.category
+          published_at: n.publishedAt || n.published_at,
+          ai_summary: n.aiSummary || n.ai_summary,
+          related_symbols: n.relatedSymbols || n.symbols || [],
+          sentiment: n.sentiment || n.ai_summary ? getSentiment(n.ai_summary || n.title) : 'neutral',
+          alert_level: n.alertLevel || n.alert_level || 4,
+          category: n.category || 'general'
         };
       });
       renderData(data);
