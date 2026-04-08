@@ -4,6 +4,7 @@
  */
 
 import pg from 'pg';
+import { sendFeishuText } from '../services/market/watcher/feishu-notify.js';
 
 const { Pool } = pg;
 
@@ -47,9 +48,9 @@ const SIGNAL_RULES = {
  */
 async function getPositions(symbol?: string): Promise<any[]> {
   const query = symbol
-    ? `SELECT * FROM positions WHERE symbol = $1 AND qty > 0`
-    : `SELECT * FROM positions WHERE qty > 0`;
-  
+    ? `SELECT * FROM strategy_positions WHERE symbol = $1 AND status = 'open'`
+    : `SELECT * FROM strategy_positions WHERE status = 'open'`;
+
   const params = symbol ? [symbol] : [];
   const result = await getPool().query(query, params);
   return result.rows;
@@ -77,7 +78,7 @@ async function getRSI(symbol: string): Promise<number> {
   
   // 从因子计算器获取
   try {
-    const { calculateAllFactors } = await import('./src/factors/calculator.ts');
+    const { calculateAllFactors } = await import('../factors/calculator.js');
     const factors = calculateAllFactors(symbol);
     return factors?.factors?.RSI_14 || 50;
   } catch {
@@ -92,18 +93,18 @@ async function getPositionChange(symbol: string): Promise<number> {
   try {
     // 简化：获取持仓天数
     const result = await getPool().query(`
-      SELECT created_at FROM positions
-      WHERE symbol = $1
-      ORDER BY created_at DESC
+      SELECT open_date FROM strategy_positions
+      WHERE symbol = $1 AND status = 'open'
+      ORDER BY open_date DESC
       LIMIT 1
     `, [symbol]);
-    
+
     if (result.rows.length === 0) {
       return 0;
     }
-    
-    const createdAt = new Date(result.rows[0].created_at);
-    const days = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+
+    const openDate = new Date(result.rows[0].open_date);
+    const days = (Date.now() - openDate.getTime()) / (1000 * 60 * 60 * 24);
     return days;
   } catch {
     return 0;
@@ -126,7 +127,7 @@ export async function generateSignal(symbol?: string): Promise<{
   const signals: any[] = [];
   
   // 获取情绪
-  const { quantifySentiment, calculateMomentum } = await import('./quantifier.ts');
+  const { quantifySentiment, calculateMomentum } = await import('./quantifier.js');
   const sentiment = await quantifySentiment(symbol);
   const momentumData = await calculateMomentum(symbol);
   
@@ -212,7 +213,7 @@ export async function generateSignal(symbol?: string): Promise<{
       await getPool().query(`
         INSERT INTO sentiment_signals 
         (symbol, action, type, reason, sentiment_score, momentum, confidence, priority, created_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
       `, [
         signal.symbol,
         signal.action,
@@ -223,6 +224,17 @@ export async function generateSignal(symbol?: string): Promise<{
         signal.confidence,
         signal.priority,
       ]);
+      
+      // 飞书通知: HIGH 或 MEDIUM 优先级
+      if (signal.priority === 'HIGH' || signal.priority === 'MEDIUM') {
+        try {
+          const { sendFeishuText } = await import('../services/market/watcher/feishu-notify.js');
+          const message = `🔔 交易信号: ${signal.symbol} ${signal.action} - ${signal.reason} (置信度: ${(signal.confidence * 100).toFixed(0)}%)`;
+          await sendFeishuText(message);
+        } catch (e: any) {
+          console.log('[signal-generator] 飞书通知失败:', e?.message || e);
+        }
+      }
     } catch {
       // 表可能不存在
     }

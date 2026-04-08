@@ -43,12 +43,12 @@ async function getNewsForSymbol(symbol: string, hours: number = 72): Promise<any
   const result = await getPool().query(`
     SELECT id, title, source, published_at, sentiment, market
     FROM news_items
-    WHERE (title LIKE $1 OR content LIKE $1 OR symbols LIKE $1)
+    WHERE (title LIKE $1 OR content LIKE $1 OR $2 = ANY(symbols))
     AND published_at > NOW() - INTERVAL '${hours} hours'
     ORDER BY published_at DESC
     LIMIT 100
-  `, [`%${symbol}%`]);
-  
+  `, [`%${symbol}%`, symbol]);
+
   return result.rows;
 }
 
