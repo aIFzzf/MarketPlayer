@@ -1,0 +1,41 @@
+{
+  "strategies": {
+    "short_term": {
+      "MSFT": {
+        "optimized_at": "2026-04-12T16:06:43.331Z",
+        "source": "quant_parameter_evolution",
+        "min_confidence": 0.6
+      },
+      "GOOGL": {
+        "optimized_at": "2026-04-12T16:12:19.622Z",
+        "source": "quant_parameter_evolution",
+        "min_confidence": 0.6
+      },
+      "AMZN": {
+        "optimized_at": "2026-04-12T16:11:58.888Z",
+        "source": "quant_parameter_evolution",
+        "min_confidence": 0.6
+      },
+      "TEST": {
+        "min_confidence": 0.6,
+        "optimized_at": "2026-04-12T16:12:49.627Z",
+        "source": "quant_parameter_evolution"
+      },
+      "FINAL_TEST": {
+        "min_confidence": 0.55,
+        "optimized_at": "2026-04-12T16:13:25.351Z",
+        "source": "quant_parameter_evolution"
+      },
+      "FEISHU_TEST": {
+        "min_confidence": 0.55,
+        "optimized_at": "2026-04-12T16:13:43.401Z",
+        "source": "quant_parameter_evolution"
+      },
+      "FINAL": {
+        "min_confidence": 0.55,
+        "optimized_at": "2026-04-12T16:14:03.158Z",
+        "source": "quant_parameter_evolution"
+      }
+    }
+  }
+}

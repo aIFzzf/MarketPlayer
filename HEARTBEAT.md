@@ -47,6 +47,9 @@
 # 高频扫描
 */5 * * * * node agents/harness/trigger-engine/scan-events.js
 
+# Agent 状态汇总 (每5分钟)
+*/5 * * * * node scripts/agent-status-summary.js
+
 # A股收盘后 (15:30 CST = 07:30 UTC)
 30 7 * * 1-5 node agents/harness/trigger-engine/daily-trigger.js A股
 

@@ -10,7 +10,7 @@ import json
 import time
 import requests
 
-API_KEY = 'd14oo91r01qop9mej190d14oo91r01qop9mej19g'
+API_KEY = 'NWR024T16AJIUMX6'
 DATA_DIR = '/Users/zhengzefeng/.openclaw/workspace/MarketPlayer/data/cache/klines'
 
 # 50只美股
@@ -46,7 +46,7 @@ def get_daily_data(symbol):
             
             return klines[:500]  # 最近500天
         else:
-            print(f"❌ {symbol}: {data.get('Note', data.get('Error', 'unknown'))")
+            print(f"❌ {symbol}: {data.get('Note', data.get('Error Message', 'unknown'))}")
             return None
             
     except Exception as e:

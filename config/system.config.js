@@ -15,17 +15,17 @@ module.exports = {
     data_slice: 3000,          // 约12年交易日
   },
 
-  // ── 策略参数（当前最优版本）─────────────
+  // ── 策略参数（v1.1.0-confirmed 验证通过）─────────────
   strategy: {
-    version: 'v1.0.1-filtered',
+    version: 'v1.1.0-confirmed',
     fast_period: 11,
     slow_period: 30,
     rsi_period: 14,
     rsi_low: 35,
     rsi_high: 65,
-    stop_loss_pct: 0.06,
+    stop_loss_pct: 0.055,
     profit_target_pct: 0.12,
-    max_hold_days: 10,
+    max_hold_days: 6,
     min_score: 65,
     atr_multiplier: 1.5,
   },

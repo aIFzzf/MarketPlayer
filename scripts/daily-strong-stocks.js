@@ -1,25 +1,69 @@
 #!/usr/bin/env node
 /**
  * 每日强势股筛选 - 邮件推送脚本
+ * 带MCP服务器超时重试机制
  */
 
 const nodemailer = require('nodemailer');
 const { fetch_top_gainers, fetch_top_volume, fetch_top_turnover } = require('../dist/mcp/tools/rank');
 const { fetch_industry_board } = require('../dist/mcp/tools/board');
 
+// MCP服务器重试配置
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 5000;
+
+/**
+ * MCP调用重试包装器
+ * @param {Function} fetchFunc - MCP异步函数
+ * @param {Object} params - 调用参数
+ * @param {string} dataName - 数据名称（用于日志）
+ * @returns {Promise} 返回数据或降级数据
+ */
+async function mcpFetchWithRetry(fetchFunc, params, dataName) {
+  let lastError = null;
+  
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(`[${dataName}] 尝试 ${attempt}/${MAX_RETRIES}...`);
+      const result = await fetchFunc(params);
+      
+      if (result && result.data && result.data.length > 0) {
+        console.log(`[${dataName}] ✅ 成功 (${result.data.length}条)`);
+        return result;
+      }
+      
+      console.log(`[${dataName}] ⚠️ 返回为空，尝试下`);
+      lastError = new Error('返回数据为空');
+    } catch (error) {
+      lastError = error;
+      console.log(`[${dataName}] ❌ 尝试 ${attempt} 失败:`, error.message);
+    }
+    
+    // 不是最后一次，等待后重试
+    if (attempt < MAX_RETRIES) {
+      console.log(`[${dataName}] ${RETRY_DELAY_MS/1000}秒后重试...`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+    }
+  }
+  
+  // 全部失败，使用降级数据
+  console.log(`[${dataName}] ❌ 全部重试失败，使用降级空数据`);
+  return { data: [], source: 'fallback' };
+}
+
 async function main() {
-  // 获取数据
+  // 获取数据（带重试机制）
   const [gainersResult, volumeResult, turnoverResult, industryResult] = await Promise.all([
-    fetch_top_gainers({ limit: 50 }),
-    fetch_top_volume({ limit: 50 }),
-    fetch_top_turnover({ limit: 50 }),
-    fetch_industry_board({ limit: 20 })
+    mcpFetchWithRetry(fetch_top_gainers, { limit: 50 }, '涨幅榜'),
+    mcpFetchWithRetry(fetch_top_volume, { limit: 50 }, '成交额榜'),
+    mcpFetchWithRetry(fetch_top_turnover, { limit: 50 }, '换手率榜'),
+    mcpFetchWithRetry(fetch_industry_board, { limit: 20 }, '行业板块')
   ]);
 
-  const gainers = gainersResult.data;
-  const volume = volumeResult.data;
-  const turnover = turnoverResult.data;
-  const industry = industryResult.data;
+  const gainers = gainersResult.data || [];
+  const volume = volumeResult.data || [];
+  const turnover = turnoverResult.data || [];
+  const industry = industryResult.data || [];
 
   // 综合筛选：同时满足涨幅>5% 成交额>10亿 换手率>5%
   const strongStocks = gainers.filter(s => s.changePercent > 0.05 && s.amount > 100000 && s.turnover > 0.05);

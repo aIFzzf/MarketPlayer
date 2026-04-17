@@ -1,15 +1,75 @@
 #!/usr/bin/env node
 /**
  * 每日强势股筛选 - 使用腾讯财经API (gtimg.cn)
+ * 带超时有重试机制
  */
 
 const nodemailer = require('nodemailer');
 
+// 配置
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 5000;
+const FETCH_TIMEOUT_MS = 10000;
+
+/**
+ * 带超时的fetch
+ */
+async function fetchWithTimeout(url, timeout = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(id);
+    return res;
+  } catch (e) {
+    clearTimeout(id);
+    throw e;
+  }
+}
+
+/**
+ * 带重试的fetch
+ */
+async function fetchWithRetry(url, dataName) {
+  let lastError = null;
+  
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(`[${dataName}] 尝试 ${attempt}/${MAX_RETRIES}...`);
+      const res = await fetchWithTimeout(url);
+      const text = await res.text();
+      
+      if (text && text.includes('"')) {
+        console.log(`[${dataName}] ✅ 成功`);
+        return text;
+      }
+      
+      lastError = new Error('返回为空');
+    } catch (error) {
+      lastError = error;
+      console.log(`[${dataName}] ❌ 尝试 ${attempt} 失败:`, error.message);
+    }
+    
+    if (attempt < MAX_RETRIES) {
+      console.log(`[${dataName}] ${RETRY_DELAY_MS/1000}秒后重试...`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+    }
+  }
+  
+  console.log(`[${dataName}] ❌ 全部失败，返回空`);
+  return '';
+}
+
 // 直接从腾讯API获取数据
 async function fetchStockData(symbols) {
   const url = `https://qt.gtimg.cn/q=${symbols.join(',')}`;
-  const res = await fetch(url);
-  const text = await res.text();
+  const text = await fetchWithRetry(url, '腾讯API');
+  
+  // 降级：返回空处理
+  if (!text) {
+    return [];
+  }
   
   const lines = text.split('\n').filter(l => l.trim());
   const stocks = [];

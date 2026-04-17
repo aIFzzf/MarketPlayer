@@ -746,24 +746,67 @@ router.post('/sentiment/suggestions/:id/approve', async (req: Request, res: Resp
 
     const signalId = signalResult[0].id;
 
+    // === P0-2: 联动 strategy_positions ===
+    // 检查是否已有持仓
+    const existingPosition = await queryOne(`
+      SELECT id, quantity FROM strategy_positions 
+      WHERE symbol = $1 AND status = 'open'
+    `, [suggestion.symbol]);
+
+    let positionAction = '';
+    if (existingPosition) {
+      // 已有持仓，根据信号调整
+      if (suggestion.suggested_action === 'BUY') {
+        // 增持
+        positionAction = `增持 ${suggestion.symbol}，当前持仓 ${existingPosition.quantity}股`;
+        await query(`
+          UPDATE strategy_positions SET 
+            quantity = quantity * 1.2,
+            updated_at = NOW()
+          WHERE id = $1
+        `, [existingPosition.id]);
+      } else if (suggestion.suggested_action === 'SELL') {
+        // 减持
+        positionAction = `减持 ${suggestion.symbol}，当前持仓 ${existingPosition.quantity}股`;
+        await query(`
+          UPDATE strategy_positions SET 
+            quantity = quantity * 0.5,
+            updated_at = NOW()
+          WHERE id = $1
+        `, [existingPosition.id]);
+      }
+    } else {
+      // 新建模拟持仓记录（供策略消费）
+      positionAction = `新建信号 ${suggestion.symbol} ${suggestion.suggested_action}`;
+      await query(`
+        INSERT INTO strategy_positions (symbol, market, quantity, open_price, status, created_at)
+        VALUES ($1, 'us', 100, 0, 'signal_pending', NOW())
+      `, [suggestion.symbol]);
+    }
+
+    // === 更新状态 ===
+    await query(`UPDATE sentiment_suggestions SET status = 'executed', executed_at = NOW() WHERE id = $1`, [suggestionId]);
+    await query(`UPDATE sentiment_signals SET status = 'executed' WHERE id = $1`, [signalId]);
+
     // 发送飞书通知
     try {
       const { sendFeishuText } = await import('../../services/market/watcher/feishu-notify');
+      const priorityEmoji = suggestion.risk_level === 'HIGH' ? '🚨' : '✅';
       await sendFeishuText(`
-✅ 交易信号已批准
+${priorityEmoji} 交易信号已执行
 
 📊 股票：${suggestion.symbol}
 🎯 操作：${suggestion.suggested_action}
 💯 置信度：${(suggestion.confidence * 100).toFixed(0)}%
-
 📝 理由：${suggestion.reason}
+📋 持仓联动：${positionAction}
 👤 审批人：${reviewed_by}
       `);
     } catch (error) {
       logger.error('Failed to send Feishu notification:', error);
     }
 
-    res.json({ success: true, signal_id: signalId });
+    res.json({ success: true, signal_id: signalId, position_action: positionAction });
   } catch (error) {
     logger.error('Error approving suggestion:', error);
     res.status(500).json({ success: false, error: 'Server error' });
