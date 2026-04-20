@@ -1,13 +1,10 @@
 {
   "symbol": "09618",
   "market": "hk",
-  "name": "京东集团-SW",
-  "price": 111.9,
-  "change": -1.0,
-  "change_pct": -0.89,
-  "volume": 8000443,
-  "amount": 0.0,
-  "pe": 14.61,
-  "market_cap": 892222650.4,
-  "updated_at": "2026-04-07T01:35:25.823817"
+  "name": "\u4eac\u4e1c\u96c6\u56e2-SW",
+  "price": 111.4,
+  "change": -0.3,
+  "change_pct": -0.27,
+  "volume": 6118243,
+  "updated_at": "2026-04-12T18:14:17.064186"
 }

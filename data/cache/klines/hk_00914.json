@@ -1,13 +1,10 @@
 {
   "symbol": "00914",
   "market": "hk",
-  "name": "海螺水泥",
+  "name": "\u6d77\u87ba\u6c34\u6ce5",
   "price": 21.06,
-  "change": -0.52,
-  "change_pct": -2.41,
-  "volume": 7800125,
-  "amount": 0.0,
-  "pe": 11.91,
-  "market_cap": 164271119.5,
-  "updated_at": "2026-04-07T01:35:11.868733"
+  "change": 0.0,
+  "change_pct": 0.0,
+  "volume": 9364499,
+  "updated_at": "2026-04-12T18:14:16.707888"
 }

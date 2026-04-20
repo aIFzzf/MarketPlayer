@@ -1,0 +1,18 @@
+0 17 * * 1-5 cd ~/.openclaw/workspace/MarketPlayer && node scripts/hourly-market-update.js >> logs/daily-update.log 2>&1
+*/30 * * * * cd ~/.openclaw/workspace/MarketPlayer && node scripts/market-status-writer.js >> logs/market-status.log 2>&1
+30 8 * * 1-5 cd ~/.openclaw/workspace/MarketPlayer && node scripts/daily-strategy-report.js >> logs/daily-report.log 2>&1
+0 9 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch A >> logs/batch-update.log 2>&1
+0 11 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch B >> logs/batch-update.log 2>&1
+0 13 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch C >> logs/batch-update.log 2>&1
+0 15 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch D >> logs/batch-update.log 2>&1
+0 17 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch E >> logs/batch-update.log 2>&1
+0 19 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch F >> logs/batch-update.log 2>&1
+0 20 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && python3 scripts/batch-kline-updater.py --batch retry >> logs/batch-update.log 2>&1
+*/5 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && node scripts/sentiment-signal-monitor.js >> logs/sentiment-monitor.log 2>&1
+0 2 * * 6 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && node scripts/longterm-to-shortopt.js >> logs/param-optimization.log 2>&1
+0 3 * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && node scripts/param-push-strategy.js >> logs/param-push.log 2>&1
+*/30 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && node scripts/market-regime.js >> logs/market-regime.log 2>&1
+0 8 * * 1-5 cd ~/.openclaw/workspace/MarketPlayer && node scripts/portfolio-risk.js >> logs/portfolio-risk.log 2>&1
+0 9 * * 1 cd ~/.openclaw/workspace/MarketPlayer && node scripts/performance-attribution.js >> logs/performance-attribution.log 2>&1
+# 每日02:00学习闭环
+0 2 * * * cd ~/.openclaw/workspace/MarketPlayer && /usr/local/bin/node agents/harness/trigger-engine/learning-trigger.js >> logs/learning.log 2>&1

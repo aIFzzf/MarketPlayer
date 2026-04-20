@@ -1,5 +1,5 @@
 {
-  "date": "2026-04-07",
+  "date": "2026-04-11",
   "sources": [
     {
       "name": "HackerNews",
@@ -11,62 +11,62 @@
         {
           "title": "openclaw/openclaw",
           "url": "https://github.com/openclaw/openclaw",
-          "stars": 351225,
-          "score": 351225
+          "stars": 354923,
+          "score": 354923
         },
         {
           "title": "affaan-m/everything-claude-code",
           "url": "https://github.com/affaan-m/everything-claude-code",
-          "stars": 144730,
-          "score": 144730
+          "stars": 151313,
+          "score": 151313
         },
         {
           "title": "obra/superpowers",
           "url": "https://github.com/obra/superpowers",
-          "stars": 139285,
-          "score": 139285
+          "stars": 147110,
+          "score": 147110
         },
         {
           "title": "anomalyco/opencode",
           "url": "https://github.com/anomalyco/opencode",
-          "stars": 139060,
-          "score": 139060
+          "stars": 141614,
+          "score": 141614
         },
         {
           "title": "x1xhlol/system-prompts-and-models-of-ai-tools",
           "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
-          "stars": 134659,
-          "score": 134659
+          "stars": 134957,
+          "score": 134957
         },
         {
           "title": "anthropics/skills",
           "url": "https://github.com/anthropics/skills",
-          "stars": 112315,
-          "score": 112315
+          "stars": 115182,
+          "score": 115182
         },
         {
           "title": "anthropics/claude-code",
           "url": "https://github.com/anthropics/claude-code",
-          "stars": 110600,
-          "score": 110600
+          "stars": 112609,
+          "score": 112609
         },
         {
           "title": "google-gemini/gemini-cli",
           "url": "https://github.com/google-gemini/gemini-cli",
-          "stars": 100531,
-          "score": 100531
+          "stars": 100961,
+          "score": 100961
         },
         {
           "title": "github/spec-kit",
           "url": "https://github.com/github/spec-kit",
-          "stars": 85994,
-          "score": 85994
+          "stars": 87117,
+          "score": 87117
         },
         {
           "title": "msitarzewski/agency-agents",
           "url": "https://github.com/msitarzewski/agency-agents",
-          "stars": 74377,
-          "score": 74377
+          "stars": 78380,
+          "score": 78380
         }
       ]
     },

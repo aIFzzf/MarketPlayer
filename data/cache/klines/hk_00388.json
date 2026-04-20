@@ -2,12 +2,9 @@
   "symbol": "00388",
   "market": "hk",
   "name": "香港交易所",
-  "price": 396.0,
-  "change": -4.4,
-  "change_pct": -1.1,
-  "volume": 2452688,
-  "amount": 0.0,
-  "pe": 28.28,
-  "market_cap": 971061124.966,
-  "updated_at": "2026-04-07T01:35:18.308846"
+  "price": 408.4,
+  "change": 0.2,
+  "change_pct": 0.05,
+  "volume": 4117884,
+  "updated_at": "2026-04-12T18:07:41.180131"
 }

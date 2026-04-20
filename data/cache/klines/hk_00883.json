@@ -2,12 +2,9 @@
   "symbol": "00883",
   "market": "hk",
   "name": "中国海洋石油",
-  "price": 27.02,
-  "change": 0.06,
-  "change_pct": 0.22,
-  "volume": 182899200,
-  "amount": 0.0,
-  "pe": 9.5,
-  "market_cap": 4969204102.1,
-  "updated_at": "2026-04-07T01:35:19.372494"
+  "price": 26.52,
+  "change": -0.14,
+  "change_pct": -0.53,
+  "volume": 81811627,
+  "updated_at": "2026-04-12T18:07:42.476790"
 }

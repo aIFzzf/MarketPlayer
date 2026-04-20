@@ -2,12 +2,9 @@
   "symbol": "02120",
   "market": "hk",
   "name": "康宁医院",
-  "price": 8.49,
-  "change": -0.03,
-  "change_pct": -0.35,
-  "volume": 7200,
-  "amount": 0.0,
-  "pe": 10.2,
-  "market_cap": 61124.0,
-  "updated_at": "2026-04-07T01:35:24.755523"
+  "price": 9.0,
+  "change": 0.5,
+  "change_pct": 5.88,
+  "volume": 21600,
+  "updated_at": "2026-04-12T18:07:48.919792"
 }

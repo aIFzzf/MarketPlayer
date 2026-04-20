@@ -1,13 +1,10 @@
 {
   "symbol": "00016",
   "market": "hk",
-  "name": "新鸿基地产",
-  "price": 131.0,
-  "change": -3.6,
-  "change_pct": -2.67,
-  "volume": 4791329,
-  "amount": 0.0,
-  "pe": 19.69,
-  "market_cap": 630366735.2,
-  "updated_at": "2026-04-07T01:35:23.678061"
+  "name": "\u65b0\u9e3f\u57fa\u5730\u4ea7",
+  "price": 138.7,
+  "change": 0.5,
+  "change_pct": 0.36,
+  "volume": 4520453,
+  "updated_at": "2026-04-12T18:14:16.983637"
 }

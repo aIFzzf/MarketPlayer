@@ -1,13 +1,10 @@
 {
   "symbol": "00017",
   "market": "hk",
-  "name": "新世界发展",
-  "price": 7.95,
-  "change": -0.12,
-  "change_pct": -1.49,
-  "volume": 9076689,
-  "amount": 0.0,
-  "pe": -1.23,
-  "market_cap": 72198051.24,
-  "updated_at": "2026-04-07T01:35:22.602814"
+  "name": "\u65b0\u4e16\u754c\u53d1\u5c55",
+  "price": 8.95,
+  "change": 0.35,
+  "change_pct": 4.07,
+  "volume": 10909808,
+  "updated_at": "2026-04-12T18:14:16.900286"
 }

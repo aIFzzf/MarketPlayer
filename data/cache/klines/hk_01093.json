@@ -2,12 +2,9 @@
   "symbol": "01093",
   "market": "hk",
   "name": "石药集团",
-  "price": 9.71,
-  "change": 0.09,
-  "change_pct": 0.94,
-  "volume": 101003222,
-  "amount": 0.0,
-  "pe": 26.03,
-  "market_cap": 978380451.34,
-  "updated_at": "2026-04-07T01:35:34.469858"
+  "price": 9.26,
+  "change": 0.15,
+  "change_pct": 1.65,
+  "volume": 56688380,
+  "updated_at": "2026-04-12T18:07:45.063102"
 }

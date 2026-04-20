@@ -1,0 +1,70 @@
+# Environment variables for cron
+SHELL=/bin/zsh
+PATH=/opt/anaconda3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+HOME=/Users/zhengzefeng
+
+# ========== MarketPlayer 量化交易系统 ==========
+
+# 市场状态监控 (每30分钟)
+*/30 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/market-status-writer.js >> logs/market-status.log 2>&1
+
+# 市场机制监控 (每30分钟)
+*/30 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/market-regime.js >> logs/market-regime.log 2>&1
+
+# 情绪信号监控 (每5分钟)
+*/5 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/sentiment-signal-monitor.js >> logs/sentiment-monitor.log 2>&1
+
+# Agent状态汇总 (每5分钟)
+*/5 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/agent-status-summary.js >> logs/agent-status.log 2>&1
+
+# 每日策略报告 (08:30)
+30 8 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/daily-strategy-report.js >> logs/daily-report.log 2>&1
+
+# 风险组合监控 (08:00)
+0 8 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/portfolio-risk.js >> logs/portfolio-risk.log 2>&1
+
+# 性能归因分析 (每周一 09:00)
+0 9 * * 1 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/performance-attribution.js >> logs/performance-attribution.log 2>&1
+
+# K线数据批量更新 (分6批次)
+0 9 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch A >> logs/batch-update.log 2>&1
+0 11 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch B >> logs/batch-update.log 2>&1
+0 13 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch C >> logs/batch-update.log 2>&1
+0 15 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch D >> logs/batch-update.log 2>&1
+0 17 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch E >> logs/batch-update.log 2>&1
+0 19 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch F >> logs/batch-update.log 2>&1
+0 20 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /opt/anaconda3/bin/python3 scripts/batch-kline-updater.py --batch retry >> logs/batch-update.log 2>&1
+
+# 市场小时更新 (17:00)
+0 17 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/hourly-market-update.js >> logs/daily-update.log 2>&1
+
+# 策略学习闭环 (每周六 02:00)
+0 2 * * 6 cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/longterm-to-shortopt.js >> logs/param-optimization.log 2>&1
+
+# 策略推送 (每天 03:00)
+0 3 * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && /usr/local/bin/node scripts/param-push-strategy.js >> logs/param-push.log 2>&1
+
+# ========== fin workspace 期权交易系统 ==========
+
+# Agent状态监控 (每5分钟)
+*/5 * * * * cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/agent_status_summary.py >> logs/agent_status.log 2>&1
+
+# 市场报告 V2 (飞书Bot推送)
+30 8 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/market_report_a_preopen_v2.py >> logs/market_reports.log 2>&1
+30 15 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/market_report_a_close_v2.py >> logs/market_reports.log 2>&1
+30 16 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/market_report_hk_close_v2.py >> logs/market_reports.log 2>&1
+30 21 * * 0-4 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/market_report_us_preopen_v2.py >> logs/market_reports.log 2>&1
+0 5 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/market_report_us_close_v2.py >> logs/market_reports.log 2>&1
+
+# 期权数据批量更新 (分5批次 + 重试)
+0 6 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/batch_option_updater.py --batch A >> logs/option_updates.log 2>&1
+15 6 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/batch_option_updater.py --batch B >> logs/option_updates.log 2>&1
+30 6 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/batch_option_updater.py --batch C >> logs/option_updates.log 2>&1
+45 6 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/batch_option_updater.py --batch D >> logs/option_updates.log 2>&1
+0 7 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/batch_option_updater.py --batch E >> logs/option_updates.log 2>&1
+30 7 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && /opt/anaconda3/bin/python3 scripts/batch_option_updater.py --batch retry >> logs/option_updates.log 2>&1
+
+# 期权机会推送 (美股开盘后和收盘前)
+30 22 * * 1-5 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/option_opportunity_scanner.py >> logs/opportunity_scanner.log 2>&1
+0 4 * * 2-6 cd /Users/zhengzefeng/.openclaw/workspace/fin && export $(grep -v '^#' .env | xargs) && /opt/anaconda3/bin/python3 scripts/option_opportunity_scanner.py >> logs/opportunity_scanner.log 2>&1
+0 2 * * 6 cd ~/.openclaw/workspace/MarketPlayer && npx tsx scripts/optimized-learning.ts >> logs/optimized-learning.log 2>&1

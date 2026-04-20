@@ -2,12 +2,9 @@
   "symbol": "01113",
   "market": "hk",
   "name": "长实集团",
-  "price": 45.36,
-  "change": -0.22,
-  "change_pct": -0.48,
-  "volume": 3614693,
-  "amount": 0.0,
-  "pe": 14.64,
-  "market_cap": 163289836.48,
-  "updated_at": "2026-04-07T01:35:20.453473"
+  "price": 48.04,
+  "change": 0.7,
+  "change_pct": 1.48,
+  "volume": 5483203,
+  "updated_at": "2026-04-12T18:07:45.698878"
 }

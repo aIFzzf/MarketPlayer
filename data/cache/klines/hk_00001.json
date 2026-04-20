@@ -1,13 +1,10 @@
 {
   "symbol": "00001",
   "market": "hk",
-  "name": "长和",
-  "price": 60.75,
-  "change": -0.2,
-  "change_pct": -0.33,
-  "volume": 5638598,
-  "amount": 0.0,
-  "pe": 19.65,
-  "market_cap": 342977861.45,
-  "updated_at": "2026-04-07T01:35:21.519025"
+  "name": "\u957f\u548c",
+  "price": 64.1,
+  "change": 1.1,
+  "change_pct": 1.75,
+  "volume": 6969475,
+  "updated_at": "2026-04-12T18:14:16.836021"
 }

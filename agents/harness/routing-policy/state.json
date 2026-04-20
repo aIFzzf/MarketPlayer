@@ -34,6 +34,11 @@
       "triggered_at": "2026-04-03T13:36:08.477Z",
       "workflow": "scan_events",
       "market": "美股"
+    },
+    "scan_events_美股_2026-4-17-14": {
+      "triggered_at": "2026-04-17T06:36:31.086Z",
+      "workflow": "scan_events",
+      "market": "美股"
     }
   },
   "fusebreaks": {}

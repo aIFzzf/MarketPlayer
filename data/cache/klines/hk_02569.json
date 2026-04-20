@@ -2,12 +2,9 @@
   "symbol": "02569",
   "market": "hk",
   "name": "舒宝国际",
-  "price": 0.96,
-  "change": 0.0,
-  "change_pct": 0.0,
-  "volume": 90000,
-  "amount": 0.0,
-  "pe": 15.53,
-  "market_cap": 86100.0,
-  "updated_at": "2026-04-07T01:35:32.295407"
+  "price": 1.0,
+  "change": 0.02,
+  "change_pct": 2.04,
+  "volume": 120000,
+  "updated_at": "2026-04-12T18:07:51.491565"
 }

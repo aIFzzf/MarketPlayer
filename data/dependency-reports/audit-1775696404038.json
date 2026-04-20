@@ -1,0 +1,580 @@
+{
+  "date": "2026-04-09T01:00:04.038Z",
+  "audit": {
+    "vulnerabilities": [
+      {
+        "name": "brace-expansion",
+        "severity": "moderate",
+        "via": [
+          {
+            "source": 1115540,
+            "name": "brace-expansion",
+            "dependency": "brace-expansion",
+            "title": "brace-expansion: Zero-step sequence causes process hang and memory exhaustion",
+            "url": "https://github.com/advisories/GHSA-f886-m6hf-6m8v",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-400"
+            ],
+            "cvss": {
+              "score": 6.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H"
+            },
+            "range": "<1.1.13"
+          },
+          {
+            "source": 1115543,
+            "name": "brace-expansion",
+            "dependency": "brace-expansion",
+            "title": "brace-expansion: Zero-step sequence causes process hang and memory exhaustion",
+            "url": "https://github.com/advisories/GHSA-f886-m6hf-6m8v",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-400"
+            ],
+            "cvss": {
+              "score": 6.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H"
+            },
+            "range": ">=4.0.0 <5.0.5"
+          }
+        ]
+      },
+      {
+        "name": "flatted",
+        "severity": "high",
+        "via": [
+          {
+            "source": 1114526,
+            "name": "flatted",
+            "dependency": "flatted",
+            "title": "flatted vulnerable to unbounded recursion DoS in parse() revive phase",
+            "url": "https://github.com/advisories/GHSA-25h7-pfq9-p65f",
+            "severity": "high",
+            "cwe": [
+              "CWE-674"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<3.4.0"
+          },
+          {
+            "source": 1115357,
+            "name": "flatted",
+            "dependency": "flatted",
+            "title": "Prototype Pollution via parse() in NodeJS flatted",
+            "url": "https://github.com/advisories/GHSA-rf6f-7fwh-wjgh",
+            "severity": "high",
+            "cwe": [
+              "CWE-1321"
+            ],
+            "cvss": {
+              "score": 0,
+              "vectorString": null
+            },
+            "range": "<=3.4.1"
+          }
+        ]
+      },
+      {
+        "name": "handlebars",
+        "severity": "critical",
+        "via": [
+          {
+            "source": 1115538,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has JavaScript Injection via AST Type Confusion by tampering @partial-block",
+            "url": "https://github.com/advisories/GHSA-3mfm-83xf-c92r",
+            "severity": "high",
+            "cwe": [
+              "CWE-94",
+              "CWE-843"
+            ],
+            "cvss": {
+              "score": 8.1,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+            },
+            "range": ">=4.0.0 <=4.7.8"
+          },
+          {
+            "source": 1115539,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has JavaScript Injection via AST Type Confusion",
+            "url": "https://github.com/advisories/GHSA-2w6w-674q-4c4q",
+            "severity": "critical",
+            "cwe": [
+              "CWE-94",
+              "CWE-843"
+            ],
+            "cvss": {
+              "score": 9.8,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+            },
+            "range": ">=4.0.0 <=4.7.8"
+          },
+          {
+            "source": 1115544,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has Prototype Pollution Leading to XSS through Partial Template Injection",
+            "url": "https://github.com/advisories/GHSA-2qvq-rjwj-gvw9",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-79",
+              "CWE-1321"
+            ],
+            "cvss": {
+              "score": 4.7,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:L/I:L/A:N"
+            },
+            "range": ">=4.0.0 <4.7.9"
+          },
+          {
+            "source": 1115588,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has a Prototype Method Access Control Gap via Missing __lookupSetter__ Blocklist Entry",
+            "url": "https://github.com/advisories/GHSA-7rx3-28cr-v5wh",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-1321"
+            ],
+            "cvss": {
+              "score": 4.8,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N"
+            },
+            "range": ">=4.6.0 <=4.7.8"
+          },
+          {
+            "source": 1115589,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has a Property Access Validation Bypass in container.lookup",
+            "url": "https://github.com/advisories/GHSA-442j-39wm-28r2",
+            "severity": "low",
+            "cwe": [
+              "CWE-367"
+            ],
+            "cvss": {
+              "score": 3.7,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N"
+            },
+            "range": ">=4.0.0 <=4.7.8"
+          },
+          {
+            "source": 1115692,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has JavaScript Injection in CLI Precompiler via Unescaped Names and Options",
+            "url": "https://github.com/advisories/GHSA-xjpj-3mr7-gcpf",
+            "severity": "high",
+            "cwe": [
+              "CWE-79",
+              "CWE-94",
+              "CWE-116"
+            ],
+            "cvss": {
+              "score": 8.3,
+              "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:H"
+            },
+            "range": ">=4.0.0 <=4.7.8"
+          },
+          {
+            "source": 1115693,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has JavaScript Injection via AST Type Confusion when passing an object as dynamic partial",
+            "url": "https://github.com/advisories/GHSA-xhpv-hc6g-r9c6",
+            "severity": "high",
+            "cwe": [
+              "CWE-94",
+              "CWE-843"
+            ],
+            "cvss": {
+              "score": 8.1,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+            },
+            "range": ">=4.0.0 <=4.7.8"
+          },
+          {
+            "source": 1115694,
+            "name": "handlebars",
+            "dependency": "handlebars",
+            "title": "Handlebars.js has Denial of Service via Malformed Decorator Syntax in Template Compilation",
+            "url": "https://github.com/advisories/GHSA-9cx6-37pm-9jff",
+            "severity": "high",
+            "cwe": [
+              "CWE-754"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": ">=4.0.0 <=4.7.8"
+          }
+        ]
+      },
+      {
+        "name": "lodash",
+        "severity": "high",
+        "via": [
+          {
+            "source": 1115806,
+            "name": "lodash",
+            "dependency": "lodash",
+            "title": "lodash vulnerable to Code Injection via `_.template` imports key names",
+            "url": "https://github.com/advisories/GHSA-r5fr-rjxr-66jc",
+            "severity": "high",
+            "cwe": [
+              "CWE-94"
+            ],
+            "cvss": {
+              "score": 8.1,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+            },
+            "range": ">=4.0.0 <=4.17.23"
+          },
+          {
+            "source": 1115810,
+            "name": "lodash",
+            "dependency": "lodash",
+            "title": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`",
+            "url": "https://github.com/advisories/GHSA-f23m-r3pf-42rh",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-1321"
+            ],
+            "cvss": {
+              "score": 6.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L"
+            },
+            "range": "<=4.17.23"
+          }
+        ]
+      },
+      {
+        "name": "nodemailer",
+        "severity": "moderate",
+        "via": [
+          {
+            "source": 1115470,
+            "name": "nodemailer",
+            "dependency": "nodemailer",
+            "title": "Nodemailer has SMTP command injection due to unsanitized `envelope.size` parameter",
+            "url": "https://github.com/advisories/GHSA-c7w3-x93f-qmm8",
+            "severity": "low",
+            "cwe": [
+              "CWE-93"
+            ],
+            "cvss": {
+              "score": 0,
+              "vectorString": null
+            },
+            "range": "<8.0.4"
+          },
+          {
+            "source": 1116270,
+            "name": "nodemailer",
+            "dependency": "nodemailer",
+            "title": "Nodemailer Vulnerable to SMTP Command Injection via CRLF in Transport name Option (EHLO/HELO) ",
+            "url": "https://github.com/advisories/GHSA-vvjj-xcjg-gr5g",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-93"
+            ],
+            "cvss": {
+              "score": 4.9,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:N"
+            },
+            "range": "<=8.0.4"
+          }
+        ]
+      },
+      {
+        "name": "path-to-regexp",
+        "severity": "high",
+        "via": [
+          {
+            "source": 1115527,
+            "name": "path-to-regexp",
+            "dependency": "path-to-regexp",
+            "title": "path-to-regexp vulnerable to Regular Expression Denial of Service via multiple route parameters",
+            "url": "https://github.com/advisories/GHSA-37ch-88jc-xwx2",
+            "severity": "high",
+            "cwe": [
+              "CWE-1333"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<0.1.13"
+          }
+        ]
+      },
+      {
+        "name": "picomatch",
+        "severity": "high",
+        "via": [
+          {
+            "source": 1115549,
+            "name": "picomatch",
+            "dependency": "picomatch",
+            "title": "Picomatch: Method Injection in POSIX Character Classes causes incorrect Glob Matching",
+            "url": "https://github.com/advisories/GHSA-3v7f-55p6-f55p",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-1321"
+            ],
+            "cvss": {
+              "score": 5.3,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+            },
+            "range": "<2.3.2"
+          },
+          {
+            "source": 1115551,
+            "name": "picomatch",
+            "dependency": "picomatch",
+            "title": "Picomatch: Method Injection in POSIX Character Classes causes incorrect Glob Matching",
+            "url": "https://github.com/advisories/GHSA-3v7f-55p6-f55p",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-1321"
+            ],
+            "cvss": {
+              "score": 5.3,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+            },
+            "range": ">=4.0.0 <4.0.4"
+          },
+          {
+            "source": 1115552,
+            "name": "picomatch",
+            "dependency": "picomatch",
+            "title": "Picomatch has a ReDoS vulnerability via extglob quantifiers",
+            "url": "https://github.com/advisories/GHSA-c2c7-rcm5-vvqj",
+            "severity": "high",
+            "cwe": [
+              "CWE-1333"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<2.3.2"
+          },
+          {
+            "source": 1115554,
+            "name": "picomatch",
+            "dependency": "picomatch",
+            "title": "Picomatch has a ReDoS vulnerability via extglob quantifiers",
+            "url": "https://github.com/advisories/GHSA-c2c7-rcm5-vvqj",
+            "severity": "high",
+            "cwe": [
+              "CWE-1333"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": ">=4.0.0 <4.0.4"
+          }
+        ]
+      }
+    ],
+    "stats": {
+      "dependencies": {
+        "prod": 279,
+        "dev": 374,
+        "optional": 60,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 710
+      },
+      "devDependencies": 0,
+      "totalDependencies": "[object Object]0"
+    }
+  },
+  "outdated": [
+    {
+      "name": "@anthropic-ai/sdk",
+      "current": "0.78.0",
+      "wanted": "0.78.0",
+      "latest": "0.86.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "@eslint/js",
+      "current": "9.39.3",
+      "wanted": "9.39.4",
+      "latest": "10.0.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "@sentry/node",
+      "current": "7.120.4",
+      "wanted": "7.120.4",
+      "latest": "10.47.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "@types/express",
+      "current": "4.17.25",
+      "wanted": "4.17.25",
+      "latest": "5.0.6",
+      "type": "dependencies"
+    },
+    {
+      "name": "@types/jest",
+      "current": "29.5.14",
+      "wanted": "29.5.14",
+      "latest": "30.0.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "@types/node",
+      "current": "20.19.35",
+      "wanted": "20.19.39",
+      "latest": "25.5.2",
+      "type": "dependencies"
+    },
+    {
+      "name": "@types/nodemailer",
+      "current": "7.0.11",
+      "wanted": "7.0.11",
+      "latest": "8.0.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "@types/pg",
+      "current": "8.16.0",
+      "wanted": "8.20.0",
+      "latest": "8.20.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "axios",
+      "current": "1.13.6",
+      "wanted": "1.15.0",
+      "latest": "1.15.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "bullmq",
+      "current": "5.70.1",
+      "wanted": "5.73.1",
+      "latest": "5.73.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "discord.js",
+      "current": "13.17.1",
+      "wanted": "13.17.1",
+      "latest": "14.26.2",
+      "type": "dependencies"
+    },
+    {
+      "name": "dotenv",
+      "current": "16.6.1",
+      "wanted": "16.6.1",
+      "latest": "17.4.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "eslint",
+      "current": "9.39.3",
+      "wanted": "9.39.4",
+      "latest": "10.2.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "express",
+      "current": "4.22.1",
+      "wanted": "4.22.1",
+      "latest": "5.2.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "futu-api",
+      "current": "9.6.5608",
+      "wanted": "9.6.5608",
+      "latest": "10.2.6208",
+      "type": "dependencies"
+    },
+    {
+      "name": "jest",
+      "current": "29.7.0",
+      "wanted": "29.7.0",
+      "latest": "30.3.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "longport",
+      "current": "3.0.22",
+      "wanted": "3.0.23",
+      "latest": "3.0.23",
+      "type": "dependencies"
+    },
+    {
+      "name": "node-cron",
+      "current": "3.0.3",
+      "wanted": "3.0.3",
+      "latest": "4.2.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "nodemailer",
+      "current": "8.0.1",
+      "wanted": "8.0.5",
+      "latest": "8.0.5",
+      "type": "dependencies"
+    },
+    {
+      "name": "pg",
+      "current": "8.19.0",
+      "wanted": "8.20.0",
+      "latest": "8.20.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "redis",
+      "current": "4.7.1",
+      "wanted": "4.7.1",
+      "latest": "5.11.0",
+      "type": "dependencies"
+    },
+    {
+      "name": "ts-jest",
+      "current": "29.4.6",
+      "wanted": "29.4.9",
+      "latest": "29.4.9",
+      "type": "dependencies"
+    },
+    {
+      "name": "typescript",
+      "current": "5.9.3",
+      "wanted": "5.9.3",
+      "latest": "6.0.2",
+      "type": "dependencies"
+    },
+    {
+      "name": "typescript-eslint",
+      "current": "8.56.1",
+      "wanted": "8.58.1",
+      "latest": "8.58.1",
+      "type": "dependencies"
+    },
+    {
+      "name": "zod",
+      "current": "3.25.76",
+      "wanted": "3.25.76",
+      "latest": "4.3.6",
+      "type": "dependencies"
+    }
+  ]
+}

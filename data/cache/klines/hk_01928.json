@@ -2,12 +2,9 @@
   "symbol": "01928",
   "market": "hk",
   "name": "金沙中国有限公司",
-  "price": 17.12,
-  "change": 0.03,
-  "change_pct": 0.18,
-  "volume": 6047632,
-  "amount": 0.0,
-  "pe": 19.87,
-  "market_cap": 103228847.66,
-  "updated_at": "2026-04-07T01:35:30.131372"
+  "price": 17.21,
+  "change": -0.01,
+  "change_pct": -0.06,
+  "volume": 7566099,
+  "updated_at": "2026-04-12T18:07:48.272703"
 }

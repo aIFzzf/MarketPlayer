@@ -1,13 +1,10 @@
 {
   "symbol": "02628",
   "market": "hk",
-  "name": "中国人寿",
-  "price": 25.0,
-  "change": -0.2,
-  "change_pct": -0.79,
-  "volume": 33731940,
-  "amount": 0.0,
-  "pe": 4.14,
-  "market_cap": 842573330.62,
-  "updated_at": "2026-04-07T01:35:16.171927"
+  "name": "\u4e2d\u56fd\u4eba\u5bff",
+  "price": 27.16,
+  "change": 0.84,
+  "change_pct": 3.19,
+  "volume": 51895695,
+  "updated_at": "2026-04-12T18:14:16.506980"
 }

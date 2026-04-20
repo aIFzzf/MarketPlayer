@@ -1,13 +1,10 @@
 {
   "symbol": "03968",
   "market": "hk",
-  "name": "招商银行",
-  "price": 49.7,
-  "change": 0.58,
-  "change_pct": 1.18,
-  "volume": 13021818,
-  "amount": 0.0,
-  "pe": 7.54,
-  "market_cap": 643769599.75,
-  "updated_at": "2026-04-07T01:35:10.786413"
+  "name": "\u62db\u5546\u94f6\u884c",
+  "price": 50.0,
+  "change": -0.1,
+  "change_pct": -0.2,
+  "volume": 7900819,
+  "updated_at": "2026-04-12T18:14:16.641537"
 }

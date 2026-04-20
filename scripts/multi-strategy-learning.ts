@@ -4,9 +4,29 @@
  */
 
 import * as fs from 'fs';
+import pg from 'pg';
+
+const { Pool } = pg;
+
+// 数据库连接
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || 'postgresql://trading_user:password@localhost:5432/trading_bot'
+});
 
 const DATA_DIR = '/Users/zhengzefeng/.openclaw/workspace/MarketPlayer/data/cache/klines';
-const SYMBOLS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA'];
+
+// 加载全部股票
+function getAllSymbols(): string[] {
+  try {
+    const files = fs.readdirSync(DATA_DIR).filter(f => f.startsWith('us_') && f.endsWith('.json'));
+    return files.map(f => f.replace('us_', '').replace('.json', ''));
+  } catch {
+    return ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA'];
+  }
+}
+
+const SYMBOLS = getAllSymbols();
+console.log(`📊 加载股票数: ${SYMBOLS.length}只`);
 
 interface KLine {
   date: string;
@@ -356,5 +376,28 @@ async function runMultiStrategyLearning() {
 
 // 运行
 runMultiStrategyLearning()
-  .then(() => process.exit(0))
-  .catch(e => { console.error(e); process.exit(1); });
+  .then(async (result) => {
+    // 写入数据库
+    console.log('\n💾 写入数据库...');
+    for (const s of result.finalScores) {
+      try {
+        await pool.query(
+          `INSERT INTO learning_actions (id, hypothesis, confidence, reasoning, new_params, created_at)
+           VALUES ($1, $2, $3, $4, $5, NOW())`,
+          [
+            `${s.strategyId}-${Date.now()}`,
+            `策略评分: ${s.strategyName}`,
+            s.score / 100,
+            JSON.stringify({ score: s.score, return: s.totalReturn, winRate: s.winRate }),
+            JSON.stringify({ id: s.strategyId, name: s.strategyName, score: s.score, totalReturn: s.totalReturn, winRate: s.winRate, sharpeRatio: s.sharpeRatio, recommendation: s.recommendation })
+          ]
+        );
+        console.log(`  ✅ ${s.strategyName} 已写入`);
+      } catch(e: unknown) {
+        console.log(`  ❌ ${s.strategyName}: ${(e as Error).message}`);
+      }
+    }
+    await pool.end();
+    process.exit(0);
+  })
+  .catch((e: Error) => { console.error(e.message); process.exit(1); });

@@ -1,13 +1,10 @@
 {
   "symbol": "02318",
   "market": "hk",
-  "name": "中国平安",
-  "price": 60.2,
-  "change": -0.4,
-  "change_pct": -0.66,
-  "volume": 29869408,
-  "amount": 0.0,
-  "pe": 7.31,
-  "market_cap": 1791301404.25,
-  "updated_at": "2026-04-07T01:35:15.110249"
+  "name": "\u4e2d\u56fd\u5e73\u5b89",
+  "price": 62.75,
+  "change": 0.5,
+  "change_pct": 0.8,
+  "volume": 27509899,
+  "updated_at": "2026-04-12T18:14:16.574792"
 }
