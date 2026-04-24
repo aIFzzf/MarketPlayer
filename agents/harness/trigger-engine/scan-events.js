@@ -4,6 +4,7 @@
  */
 
 const { execSync } = require('child_process');
+const NODE_BIN = '/usr/local/bin/node';
 
 function isMarketOpen() {
     const now = new Date();
@@ -34,7 +35,7 @@ if (!isMarketOpen()) {
 }
 
 try {
-    const cmd = `node agents/harness/routing-policy/routing-policy.js '{"workflow":"scan_events","priority":"high"}'`;
+    const cmd = `${NODE_BIN} agents/harness/routing-policy/routing-policy.js '{"workflow":"scan_events","priority":"high"}'`;
     const result = execSync(cmd, { cwd: process.cwd(), encoding: 'utf-8' });
     console.log(result);
 } catch (e) {

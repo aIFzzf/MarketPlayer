@@ -14,5 +14,8 @@
 */30 * * * * cd /Users/zhengzefeng/.openclaw/workspace/MarketPlayer && node scripts/market-regime.js >> logs/market-regime.log 2>&1
 0 8 * * 1-5 cd ~/.openclaw/workspace/MarketPlayer && node scripts/portfolio-risk.js >> logs/portfolio-risk.log 2>&1
 0 9 * * 1 cd ~/.openclaw/workspace/MarketPlayer && node scripts/performance-attribution.js >> logs/performance-attribution.log 2>&1
+# 每日20:02持仓复盘-邮箱
+0 20 * * 1-5 cd ~/.openclaw/workspace/MarketPlayer && node scripts/daily-position-review.ts >> logs/position-review.log 2>&1
+
 # 每日02:00学习闭环
 0 2 * * * cd ~/.openclaw/workspace/MarketPlayer && /usr/local/bin/node agents/harness/trigger-engine/learning-trigger.js >> logs/learning.log 2>&1
